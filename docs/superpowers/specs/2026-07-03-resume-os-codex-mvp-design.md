@@ -176,27 +176,56 @@ shared/
 - 修改比對與核准規則。
 - 104 欄位輸出規則。
 
-## 8. 外部專案參考策略
+## 8. 開源專案與技術來源地圖
 
-### 8.1 Resume Matcher
+本專案不會把外部 repository 整包拼接成產品。每個來源都先分類為 `adapt`、`reference`、`defer`、`needs_review` 或 `reject`，並記錄進入 MVP 的邊界。
 
-採 `adapt`：參考其 Apache-2.0 授權下的概念，包括逐題訪談、Master Resume、區段更新、經歷合併、訪談歷史、弱敘述追問、Diff 與防虛構規則。
+| 來源 | 分類 | Codex MVP 用途 | 後續用途與邊界 |
+|---|---|---|---|
+| [OpenResume](https://github.com/xitanggg/open-resume) | `reference` | 參考 PDF 版面解析、履歷基本欄位與 ATS-friendly 排版觀念 | Parser 偏英文 section keyword，Schema 沒有證據、人物隔離與版本；採 AGPL-3.0，MVP 不複製其程式碼 |
+| [Resume Matcher](https://github.com/srbhr/Resume-Matcher) | `adapt` | 參考逐題訪談、Master Resume、區段更新、Diff、弱敘述追問與防虛構規則 | 採 Apache-2.0；只改寫需要的規則與測試，不搬入整套前後端 |
+| [Resume Tailor](https://github.com/farmerTheodor/Resume-Tailor) | `needs_review` | 不作依賴 | 目前無法可靠查證 repository 內容與授權；找到正確來源前不得引用或安裝 |
+| OpenAI Resume forks | `needs_review` | 不使用未指名來源的 Prompt | 必須先取得確切 repository、commit 與 license，才能評估 Achievement Rewrite 或 Cover Letter 規則 |
+| [RateIn](https://github.com/alessandroamenta/RateIn) | `defer` | 不進 104 MVP | 可參考 LinkedIn profile 評估維度；其舊版 Assistants API、Vision 與 scraping 流程不可直接沿用 |
+| LinkedIn MCP server | `needs_review` | 不進 104 MVP | 進入 LinkedIn 階段前，需確認確切 repo、OAuth 權限、平台條款、資料範圍與唯讀邊界 |
+| [spaCy](https://github.com/explosion/spaCy) | `defer` | MVP 不需要額外 NLP runtime | 未來可做技能、公司、職稱與時間等 NER；採用前需用繁中 104 樣本驗證模型表現，不能假設英文模型適用 |
+| [Sentence Transformers](https://github.com/huggingface/sentence-transformers) | `defer` | MVP 不做 JD 語意比對 | 未來用於技能同義詞與 Resume／JD 語意相似度；必須選擇支援繁中的模型並建立本地評估集 |
+| [python-docx](https://github.com/python-openxml/python-docx) | `defer` | MVP 先輸出可貼回 104 的文字 | 後續 DOCX 匯出候選；採 MIT，可依核准後的 Master Resume 產生文件 |
+| [ReportLab](https://docs.reportlab.com/) | `defer` | MVP 不產 PDF | 後續 PDF 匯出候選；需額外驗證繁中文字型、換頁與 ATS 文字層，不因能產 PDF 就視為 ATS-friendly |
+| 既有三組模型 API | `defer` | Codex MVP 直接使用目前對話模型，不另接 API | 本機網頁階段才建立 provider adapter；API key 只從既有共用金鑰機制解析，不寫入 repo 或 profile database |
 
-不可直接沿用的缺口：
+### 8.1 Resume Matcher 可吸收規則
 
-- 缺少每位人物獨立資料庫。
-- 缺少 104 繁中欄位規則。
-- 缺少新舊衝突質問。
-- 缺少 PM 決策與 AI 實作的貢獻區分。
-- 部分防虛構仍只依賴 Prompt，MVP 需增加 Evidence Guard。
+採用其概念：
 
-### 8.2 OpenResume
+- 一次詢問一個關鍵問題。
+- 不得虛構公司、職稱、日期、數字、技能、證照與成果。
+- 只更新目前訪談區段，不讓模型覆蓋其他既有資料。
+- 同一工作、學歷或專案依穩定識別資料合併。
+- 保存問題、回答與修改前快照。
+- 優先追問成果、規模、工具與本人貢獻。
+- 把新增技能或證照視為高風險變更。
+- 移除過度 AI 化的誇張詞與空泛企業黑話。
 
-採 `reference`：只參考 PDF 版面解析與基本履歷欄位。其 parser 偏英文版面與英文 section keyword，資料模型也沒有證據、人物隔離及 canonical versioning；加上 AGPL-3.0 授權，MVP 不直接複製其程式碼。
+必須自行補強：
 
-### 8.3 其他專案
+- 每位人物獨立資料庫。
+- 104 繁中欄位規則。
+- 新舊資訊衝突質問。
+- PM 決策與 AI 實作的貢獻區分。
+- 逐項修改理由與使用者核准。
+- 可追溯 Evidence Guard。Resume Matcher 的測試已指出部分虛構敘事仍可能只能靠 Prompt 阻擋，因此本專案不能只依賴 Prompt。
 
-LinkedIn／RateIn 不在 104 MVP 範圍。無法可靠查證的 Resume Tailor repo 不列為核心依賴。
+### 8.2 OpenResume 可參考邊界
+
+OpenResume 的欄位模型可作 Parser 的最小參考，但不能直接成為 canonical schema。Resume OS 還需要 profile ownership、來源證據、本人貢獻類型、衝突問題、提案狀態與版本歷史。
+
+### 8.3 分階段啟用順序
+
+1. Codex MVP：Resume Matcher 規則觀念、自建 profile database、Evidence Guard、104 文字輸出。
+2. 104 MVP 驗證後：評估 python-docx 與 ReportLab，加入 DOCX／PDF 匯出。
+3. 加入 JD 後：評估繁中 spaCy pipeline 與 Sentence Transformers 模型。
+4. LinkedIn 階段：重新審核 RateIn 與具名 LinkedIn MCP，不沿用舊 scraping 或未確認權限。
 
 ## 9. 錯誤與安全邊界
 
