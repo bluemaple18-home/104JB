@@ -15,3 +15,12 @@ def test_skill_keeps_llm_outside_deterministic_mutations() -> None:
     assert "LLM" in text
     assert "deterministic" in text
     assert "ai_assisted_implementation" in text
+
+
+def test_skill_synthesizes_capabilities_before_resume_rewriting() -> None:
+    text = Path(".codex/skills/resume-os/SKILL.md").read_text("utf-8")
+    assert "讀完整份原始履歷" in text
+    assert "Capability Profile" in text
+    assert "至少兩段不同經歷" in text
+    assert "不得只從職稱、工具或單一工作項目" in text
+    assert "Capability Profile 未核准前，不得開始履歷改寫" in text

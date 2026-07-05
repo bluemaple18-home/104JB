@@ -17,13 +17,18 @@ Never treat model output as a verified fact. Never directly edit SQLite, profile
 2. If no active profile exists, create or select one. Do not read or write resume data before explicit profile selection.
 3. Import the 104 URL. If it returns `needs_fallback`, request a PDF or pasted text.
 4. Treat parsed fields as candidates. Preserve uncertain source text and ask the user to confirm it.
-5. Ask one critical question at a time（一次只問一個關鍵問題）. Simple factual fields may be grouped.
-6. If old and new facts conflict, display the conflict question. Do not overwrite the canonical value before an answer.
-7. Create proposals that show 修改前、修改後、修改理由 and evidence references.
-8. Run Evidence Guard before asking for approval. A blocked proposal cannot be accepted.
-9. Let the user accept, reject, or edit each proposal. Edited text must pass Evidence Guard again.
-10. Only an explicit accepted proposal may update the Master Resume. 不得直接寫入 Master Resume.
-11. Export only the active profile's approved canonical entities and present the five-part evaluation without a total score.
+5. 讀完整份原始履歷的主要經歷，再開始定位。
+6. 跨公司、職稱、產業與任務合成 Capability Profile。每項穩定核心能力需由至少兩段不同經歷支持。
+7. 不得只從職稱、工具或單一工作項目推導核心能力。
+8. 顯示 Capability Profile 的整體定位、能力模式、證據對應與誤寫風險，讓使用者接受、拒絕或編輯。
+9. Capability Profile 未核准前，不得開始履歷改寫。
+10. 核准後才根據能力與證據缺口訪談。一次只問一個關鍵問題；簡單事實欄位可集中詢問。
+11. If old and new facts conflict, display the conflict question. Do not overwrite the canonical value before an answer.
+12. Create proposals that show 修改前、修改後、修改理由 and evidence references.
+13. Run Evidence Guard before asking for approval. A blocked proposal cannot be accepted.
+14. Let the user accept, reject, or edit each proposal. Edited text must pass Evidence Guard again.
+15. Only an explicit accepted proposal may update the Master Resume. 不得直接寫入 Master Resume.
+16. Export only the active profile's approved canonical entities and present the five-part evaluation without a total score.
 
 ## Contribution truthfulness
 
