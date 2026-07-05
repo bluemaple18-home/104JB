@@ -33,3 +33,17 @@ def test_missing_entity_update_does_not_create_version(tmp_path: Path) -> None:
         db.replace_entity("missing", {"name": "Missing"}, reason="invalid")
 
     assert db.list_versions("missing") == []
+
+
+def test_capability_profile_is_a_profile_scoped_canonical_entity(tmp_path: Path) -> None:
+    matt = ResumeDatabase(tmp_path / "matt" / "resume.sqlite")
+    friend = ResumeDatabase(tmp_path / "friend" / "resume.sqlite")
+    entity_id = matt.create_entity(
+        EntityKind.CAPABILITY,
+        "capability:core",
+        {"name": "Synthetic Capability Profile", "summary": "Cross-domain integration"},
+    )
+
+    assert matt.get_entity(entity_id)["summary"] == "Cross-domain integration"
+    with pytest.raises(KeyError):
+        friend.get_entity(entity_id)

@@ -10,6 +10,7 @@ class EntityKind(StrEnum):
     PROJECT = "project"
     EDUCATION = "education"
     SKILL = "skill"
+    CAPABILITY = "capability"
 
 
 class Evidence(BaseModel):

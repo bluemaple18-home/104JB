@@ -24,6 +24,18 @@ def test_render_104_omits_empty_sections() -> None:
     assert "學歷" not in output
 
 
+def test_render_104_does_not_emit_internal_capability_section() -> None:
+    output = render_104(
+        [
+            {"kind": "capability", "name": "Synthetic Capability Profile"},
+            {"kind": "project", "name": "Synthetic Project"},
+        ]
+    )
+
+    assert "Synthetic Capability Profile" not in output
+    assert "Synthetic Project" in output
+
+
 def test_evaluation_has_five_dimensions_and_no_total_score() -> None:
     result = evaluate_resume([{"id": "project-1", "kind": "project", "name": "MDreport2", "evidence_count": 3}])
     assert set(result) == {
