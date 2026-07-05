@@ -34,6 +34,12 @@ uv run resume-os evidence add <entity-id> <field-path> \
 
 Only use `entity add` for an initial canonical entity derived from preserved source material. Later changes must use proposals.
 
+## Capability Profile gate
+
+Create one `capability:core` entity in the active profile. Keep `summary`, `patterns`, `evidence_ids`, `positioning`, and `anti_positioning` profile-local. Never write person-specific capability content to Git or `ai-core`.
+
+Each stable pattern must cite evidence from at least two different experiences. Create capability changes through proposal create/edit/accept; do not continue to resume rewriting until the Capability Profile is accepted.
+
 ## Conflict and proposal lifecycle
 
 ```bash

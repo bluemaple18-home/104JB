@@ -24,3 +24,13 @@ def test_skill_synthesizes_capabilities_before_resume_rewriting() -> None:
     assert "至少兩段不同經歷" in text
     assert "不得只從職稱、工具或單一工作項目" in text
     assert "Capability Profile 未核准前，不得開始履歷改寫" in text
+
+
+def test_capability_workflow_requires_evidence_and_profile_local_storage() -> None:
+    text = Path(".codex/skills/resume-os/references/workflow.md").read_text("utf-8")
+    assert "capability:core" in text
+    assert "summary" in text and "patterns" in text
+    assert "evidence_ids" in text
+    assert "anti_positioning" in text
+    assert "profile-local" in text
+    assert "ai-core" in text
