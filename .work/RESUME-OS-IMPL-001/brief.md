@@ -1,9 +1,9 @@
 # RESUME-OS-IMPL-001
 
-任務ID：RESUME-OS-IMPL-001  
-卡片類型｜派工對象：Implementation｜新 Codex thread  
-請讀：`docs/superpowers/specs/2026-07-03-resume-os-codex-mvp-design.md`、`docs/superpowers/plans/2026-07-05-resume-os-codex-mvp-implementation.md`、`.work/RESUME-OS-IMPL-001/context_manifest.md`  
-任務目的：依計畫執行 Task 1–8，先完成 deterministic core，再建立與驗證 repo-local Resume OS Skill。  
+任務ID：RESUME-OS-IMPL-001
+卡片類型｜派工對象：Implementation｜新 Codex thread
+請讀：`docs/superpowers/specs/2026-07-03-resume-os-codex-mvp-design.md`、`docs/superpowers/plans/2026-07-05-resume-os-codex-mvp-implementation.md`、`.work/RESUME-OS-IMPL-001/context_manifest.md`
+任務目的：依計畫執行 Task 1–8，先完成 deterministic core，再建立與驗證 repo-local Resume OS Skill。
 證據路徑：`.work/RESUME-OS-IMPL-001/evidence/`
 
 ## 執行要求
