@@ -185,3 +185,73 @@ class ResumeDatabase:
         ).fetchall()
         by_id = {row["id"]: dict(row) for row in rows}
         return [by_id[evidence_id] for evidence_id in evidence_ids if evidence_id in by_id]
+
+    def list_entities(self) -> list[dict]:
+        rows = self.connection.execute(
+            "SELECT e.id,e.kind,e.stable_key,e.payload_json,COUNT(v.id) AS evidence_count "
+            "FROM entities e LEFT JOIN evidence v ON v.entity_id=e.id "
+            "GROUP BY e.id ORDER BY e.created_at,e.id"
+        ).fetchall()
+        return [
+            {
+                "id": row["id"],
+                "kind": row["kind"],
+                "stable_key": row["stable_key"],
+                **json.loads(row["payload_json"]),
+                "evidence_count": row["evidence_count"],
+            }
+            for row in rows
+        ]
+
+    def add_source(
+        self,
+        *,
+        source_type: str,
+        source_ref: str,
+        raw_path: str,
+        sha256: str,
+        status: str,
+    ) -> str:
+        source_id = str(uuid4())
+        with self.connection:
+            self.connection.execute(
+                "INSERT INTO sources(id,source_type,source_ref,raw_path,sha256,status) "
+                "VALUES(?,?,?,?,?,?)",
+                (source_id, source_type, source_ref, raw_path, sha256, status),
+            )
+        return source_id
+
+    def list_sources(self) -> list[dict]:
+        return [
+            dict(row)
+            for row in self.connection.execute(
+                "SELECT * FROM sources ORDER BY created_at,id"
+            ).fetchall()
+        ]
+
+    def answer_conflict(self, conflict_id: str, answer: object) -> dict:
+        row = self.connection.execute(
+            "SELECT * FROM conflicts WHERE id=?", (conflict_id,)
+        ).fetchone()
+        if row is None:
+            raise KeyError(conflict_id)
+        if row["status"] != "open":
+            raise ValueError("conflict is already resolved")
+        payload = self.get_entity(row["entity_id"])
+        payload[row["field_path"].rsplit(".", 1)[-1]] = answer
+        encoded = self._json(payload)
+        with self.connection:
+            self.connection.execute(
+                "UPDATE entities SET payload_json=?,updated_at=CURRENT_TIMESTAMP WHERE id=?",
+                (encoded, row["entity_id"]),
+            )
+            self.connection.execute(
+                "INSERT INTO versions(id,entity_id,snapshot_json,reason,proposal_id) "
+                "VALUES(?,?,?,?,NULL)",
+                (str(uuid4()), row["entity_id"], encoded, "conflict resolved"),
+            )
+            self.connection.execute(
+                "UPDATE conflicts SET status='resolved',answer_json=? WHERE id=?",
+                (self._json(answer), conflict_id),
+            )
+        return {"id": conflict_id, "status": "resolved", "answer": answer}

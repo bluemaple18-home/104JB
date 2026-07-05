@@ -1,0 +1,4 @@
+interface:
+  display_name: "Resume OS"
+  short_description: "以證據約束與逐項核准方式修改繁體中文 104 履歷流程"
+  default_prompt: "使用 $resume-os 選擇人物並開始履歷訪談。"
