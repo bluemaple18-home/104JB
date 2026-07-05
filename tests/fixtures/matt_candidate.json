@@ -1,0 +1,12 @@
+{
+  "slug": "matt-synthetic",
+  "display_name": "Matt Synthetic",
+  "entity": {
+    "kind": "project",
+    "stable_key": "project:mdreport2-synthetic",
+    "payload": {
+      "name": "MDreport2 Synthetic",
+      "role": "以 PM 方式定義需求與驗收，透過 AI 協作完成實作"
+    }
+  }
+}

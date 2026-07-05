@@ -1,0 +1,4 @@
+Command: uv run pytest tests/test_acceptance.py -q
+Result: 3 passed in 0.24s
+Scope: two synthetic profiles, blocked/rejected export exclusion, accepted export, five-part evaluation
+Real profile data used: no

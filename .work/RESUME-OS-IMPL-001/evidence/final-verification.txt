@@ -1,0 +1,14 @@
+Command: uv run pytest -q
+Result: 40 passed in 0.39s
+
+Command: python3 <skill-creator>/scripts/quick_validate.py .codex/skills/resume-os
+Result: Skill is valid!
+
+Command: uv run resume-os --help
+Result: profile, status, source, entity, conflict, evidence, proposal, export, evaluate commands listed
+
+Command: git diff --check
+Result: exit 0, no whitespace errors
+
+Forward-test: not run; subagent validation was not authorized for this card
+Real friend acceptance: waiting_for_fixture

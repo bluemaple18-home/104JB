@@ -19,7 +19,12 @@ class Evidence(BaseModel):
     source_ref: str
     content: str
     contribution_type: Literal[
-        "fact", "owner_decision", "business_rule", "validation", "ai_assisted_implementation"
+        "fact",
+        "owner_decision",
+        "business_rule",
+        "validation",
+        "ai_assisted_implementation",
+        "personal_implementation",
     ] = "fact"
 
 

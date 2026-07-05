@@ -71,7 +71,14 @@ def _parser() -> argparse.ArgumentParser:
     add_evidence.add_argument(
         "--contribution-type",
         default="fact",
-        choices=["fact", "owner_decision", "business_rule", "validation", "ai_assisted_implementation"],
+        choices=[
+            "fact",
+            "owner_decision",
+            "business_rule",
+            "validation",
+            "ai_assisted_implementation",
+            "personal_implementation",
+        ],
     )
 
     proposal = sub.add_parser("proposal")

@@ -1,0 +1,12 @@
+{
+  "slug": "friend-synthetic",
+  "display_name": "Friend Synthetic",
+  "entity": {
+    "kind": "experience",
+    "stable_key": "experience:synthetic-company",
+    "payload": {
+      "name": "Synthetic Friend Company",
+      "title": "產品營運"
+    }
+  }
+}

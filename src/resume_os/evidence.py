@@ -26,9 +26,8 @@ def unsupported_claims(
     if new_numbers and not all(any(number in item for item in evidence) for number in new_numbers):
         risks.append("unsupported_number")
     if any(phrase in after for phrase in ENGINEERING_OWNERSHIP):
-        has_ai_help = any("ai_assisted_implementation" in item for item in evidence)
         has_personal_code = any("personal_implementation" in item for item in evidence)
-        if has_ai_help and not has_personal_code:
+        if not has_personal_code:
             risks.append("engineering_ownership")
     field = "" if field_path is None else field_path.rsplit(".", 1)[-1]
     high_risk = HIGH_RISK_FIELDS.get(field)
