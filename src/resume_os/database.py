@@ -3,6 +3,7 @@ import sqlite3
 from pathlib import Path
 from uuid import uuid4
 
+from resume_os.merge import MergeResult, merge_candidate
 from resume_os.models import EntityKind
 
 SCHEMA = """
@@ -110,6 +111,48 @@ class ResumeDatabase:
                 "reason": row["reason"],
                 "proposal_id": row["proposal_id"],
                 "created_at": row["created_at"],
+            }
+            for row in rows
+        ]
+
+    def merge_entity(self, entity_id: str, candidate: dict) -> MergeResult:
+        result = merge_candidate(self.get_entity(entity_id), candidate)
+        if not result.conflicts:
+            self.replace_entity(entity_id, result.merged, reason="candidate merge")
+            return result
+
+        with self.connection:
+            for conflict in result.conflicts:
+                self.connection.execute(
+                    "INSERT INTO conflicts("
+                    "id,entity_id,field_path,current_json,candidate_json,question"
+                    ") VALUES(?,?,?,?,?,?)",
+                    (
+                        str(uuid4()),
+                        entity_id,
+                        conflict.field,
+                        self._json(conflict.current),
+                        self._json(conflict.candidate),
+                        conflict.question,
+                    ),
+                )
+        return result
+
+    def list_conflicts(self, entity_id: str) -> list[dict]:
+        rows = self.connection.execute(
+            "SELECT id,field_path,current_json,candidate_json,question,status,answer_json "
+            "FROM conflicts WHERE entity_id=? ORDER BY created_at,id",
+            (entity_id,),
+        ).fetchall()
+        return [
+            {
+                "id": row["id"],
+                "field_path": row["field_path"],
+                "current": json.loads(row["current_json"]),
+                "candidate": json.loads(row["candidate_json"]),
+                "question": row["question"],
+                "status": row["status"],
+                "answer": None if row["answer_json"] is None else json.loads(row["answer_json"]),
             }
             for row in rows
         ]
