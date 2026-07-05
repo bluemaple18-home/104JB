@@ -4,7 +4,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from resume_os.merge import MergeResult, merge_candidate
-from resume_os.models import EntityKind
+from resume_os.models import EntityKind, Evidence
 
 SCHEMA = """
 PRAGMA foreign_keys = ON;
@@ -156,3 +156,32 @@ class ResumeDatabase:
             }
             for row in rows
         ]
+
+    def add_evidence(self, evidence: Evidence) -> str:
+        evidence_id = str(uuid4())
+        with self.connection:
+            self.connection.execute(
+                "INSERT INTO evidence("
+                "id,entity_id,field_path,source_type,source_ref,content,contribution_type"
+                ") VALUES(?,?,?,?,?,?,?)",
+                (
+                    evidence_id,
+                    evidence.entity_id,
+                    evidence.field_path,
+                    evidence.source_type,
+                    evidence.source_ref,
+                    evidence.content,
+                    evidence.contribution_type,
+                ),
+            )
+        return evidence_id
+
+    def get_evidence(self, evidence_ids: list[str]) -> list[dict]:
+        if not evidence_ids:
+            return []
+        placeholders = ",".join("?" for _ in evidence_ids)
+        rows = self.connection.execute(
+            f"SELECT * FROM evidence WHERE id IN ({placeholders})", evidence_ids
+        ).fetchall()
+        by_id = {row["id"]: dict(row) for row in rows}
+        return [by_id[evidence_id] for evidence_id in evidence_ids if evidence_id in by_id]
