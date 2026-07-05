@@ -115,3 +115,29 @@ def test_edited_text_runs_guard_again_before_acceptance(tmp_path: Path) -> None:
     assert edited["status"] == "edited"
     service.accept(edited["id"])
     assert db.get_entity(entity_id)["result"] == "改善流程清晰度"
+
+
+def test_metadata_ids_are_not_treated_as_claim_numbers(tmp_path: Path) -> None:
+    db = ResumeDatabase(tmp_path / "resume.sqlite")
+    entity_id = db.create_entity(EntityKind.CAPABILITY, "capability:core", {"name": "Capability"})
+    evidence_id = db.add_evidence(
+        Evidence(
+            entity_id=entity_id,
+            field_path="profile",
+            source_type="interview",
+            source_ref="answer-1",
+            content="擅長跨域整合",
+        )
+    )
+    service = ProposalService(db)
+
+    proposal = service.create(
+        entity_id,
+        "profile",
+        {"summary": "擅長跨域整合", "evidence_ids": [evidence_id]},
+        reason="建立核心能力",
+        evidence_ids=[evidence_id],
+    )
+
+    assert proposal["status"] == "pending"
+    assert proposal["risk_flags"] == []

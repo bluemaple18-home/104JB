@@ -16,6 +16,17 @@ HIGH_RISK_FIELDS = {
     "start_date": "unsupported_date",
     "end_date": "unsupported_date",
 }
+NON_CLAIM_KEYS = {"evidence_ids", "source_ref"}
+
+
+def claim_text(value: object) -> str:
+    if isinstance(value, dict):
+        return " ".join(
+            claim_text(item) for key, item in value.items() if key not in NON_CLAIM_KEYS
+        )
+    if isinstance(value, list):
+        return " ".join(claim_text(item) for item in value)
+    return "" if value is None else str(value)
 
 
 def unsupported_claims(

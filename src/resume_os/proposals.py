@@ -2,7 +2,7 @@ import json
 from uuid import uuid4
 
 from resume_os.database import ResumeDatabase
-from resume_os.evidence import unsupported_claims
+from resume_os.evidence import claim_text, unsupported_claims
 
 
 class ProposalService:
@@ -28,8 +28,8 @@ class ProposalService:
         field = field_path.rsplit(".", 1)[-1]
         before = payload.get(field)
         risks = unsupported_claims(
-            "" if before is None else str(before),
-            str(after),
+            claim_text(before),
+            claim_text(after),
             self._evidence_text(evidence_ids),
             field_path=field_path,
         )
@@ -117,8 +117,8 @@ class ProposalService:
         if proposal["status"] in {"accepted", "rejected"}:
             raise ValueError(f"cannot edit {proposal['status']} proposal")
         risks = unsupported_claims(
-            "" if proposal["before"] is None else str(proposal["before"]),
-            str(after),
+            claim_text(proposal["before"]),
+            claim_text(after),
             self._evidence_text(proposal["evidence_ids"]),
             field_path=proposal["field_path"],
         )
