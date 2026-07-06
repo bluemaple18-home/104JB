@@ -34,7 +34,7 @@
 
 ## Blocked & Errors
 
-- `gh auth status` 顯示本機 GitHub token 無效；外部推送前需重新登入。
+- `gh auth status` 顯示本機 GitHub token 無效；HTTPS push 回報 `could not read Username`，SSH 回報 `Permission denied (publickey)`。外部推送前需執行 `gh auth login -h github.com -p https -w`。
 - 沒有朋友真實 104 fixture，不能宣稱完整 MVP 驗收完成。
 
 ## Key Decisions & Resolved Questions

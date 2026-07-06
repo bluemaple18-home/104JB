@@ -6,7 +6,7 @@
 
 ## Blocker
 
-- GitHub CLI 目前尚未通過驗證；推送與 Release 上傳需有效的 `bluemaple18-home` GitHub 認證。
+- GitHub CLI token 無效；HTTPS push 無帳密，SSH 亦無可用 GitHub key。推送與 Release 上傳需先完成 `bluemaple18-home` GitHub 認證。
 - 朋友真實 104 履歷尚未提供，Task 8 保持 `waiting_for_fixture`。
 
 ## Fork
@@ -22,9 +22,9 @@
 
 ## 下一步
 
-1. 驗證並提交 `.work/current`。
+1. 執行 `gh auth login -h github.com -p https -w` 完成 GitHub 認證。
 2. 推送目前完整歷史到目標 repository。
-3. 將加密人物資料包上傳為 GitHub Release asset。
+3. 將已驗證的加密人物資料包上傳為 GitHub Release asset。
 
 ## 等待條件
 
