@@ -2,6 +2,7 @@
 
 ## 必读
 
+- `.work/RESUME-OS-IMPL-001/interview_record.md`（本機 authoritative 訪談紀錄，Git ignored）
 - `docs/superpowers/specs/2026-07-03-resume-os-codex-mvp-design.md`
 - `docs/superpowers/plans/2026-07-05-resume-os-codex-mvp-implementation.md`
 - `.work/RESUME-OS-IMPL-001/brief.md`
