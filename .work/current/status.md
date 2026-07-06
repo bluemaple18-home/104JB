@@ -6,7 +6,6 @@
 
 ## Blocker
 
-- GitHub CLI token 無效；HTTPS push 無帳密，SSH 亦無可用 GitHub key。推送與 Release 上傳需先完成 `bluemaple18-home` GitHub 認證。
 - 朋友真實 104 履歷尚未提供，Task 8 保持 `waiting_for_fixture`。
 
 ## Fork
@@ -19,16 +18,17 @@
 - Task 1–7 與 Task 8 synthetic acceptance 已完成。
 - Matt profile 已建立能力模型、三個專案與履歷開頭摘要。
 - 現職經歷有一份通過 Evidence Guard、尚待使用者核准的 bullets proposal。
+- 程式已推送至 `bluemaple18-home/104JB` 的 `main`。
+- 私有人物資料已加密並上傳至 Release `handoff-20260706`，密碼未存於 GitHub。
 
 ## 下一步
 
-1. 執行 `gh auth login -h github.com -p https -w` 完成 GitHub 認證。
-2. 推送目前完整歷史到目標 repository。
-3. 將已驗證的加密人物資料包上傳為 GitHub Release asset。
+1. 另一台電腦 clone repository 並閱讀 `.work/current/handoff.md`。
+2. 下載、驗證、解密 Release asset，再還原 ignored 私人資料。
+3. 另一台建立獨立 branch 或 worktree 後再開始平行開發。
 
 ## 等待條件
 
-- 有效 GitHub 認證。
 - 朋友真實履歷 fixture。
 
 ## 限制

@@ -23,8 +23,10 @@
 
 - 主力 branch：`codex/resume-os-mvp`。
 - 目前無 server。
-- tracked working tree 在建立本 handoff 前為乾淨狀態。
-- 私有人物資料會封裝為加密 Release asset；不會出現在 Git diff。
+- GitHub repository：`https://github.com/bluemaple18-home/104JB`。
+- 遠端 `main` 已建立；私有人物資料不在 Git tree/history。
+- 加密 Release：`https://github.com/bluemaple18-home/104JB/releases/tag/handoff-20260706`。
+- 加密 asset SHA-256：`2e108837f0ce446d28ba22dac6ff0996c97de4cdaf97eb7db5d0981bf64571c3`。
 
 ## In Progress / Remaining Work
 
@@ -34,7 +36,7 @@
 
 ## Blocked & Errors
 
-- `gh auth status` 顯示本機 GitHub token 無效；HTTPS push 回報 `could not read Username`，SSH 回報 `Permission denied (publickey)`。外部推送前需執行 `gh auth login -h github.com -p https -w`。
+- GitHub HTTPS 認證已透過官方 browser device flow 恢復，原推送 blocker 已解除。
 - 沒有朋友真實 104 fixture，不能宣稱完整 MVP 驗收完成。
 
 ## Key Decisions & Resolved Questions
@@ -60,3 +62,19 @@
 
 - 接手前執行 `git status --short`、`git worktree list`。
 - 執行 `uv run pytest` 與 `git diff --check`。
+
+## Private profile restore
+
+以下指令在另一台電腦的 `<repo-root>` 執行；解密密碼由使用者透過 GitHub 以外的通道取得：
+
+```bash
+cd <repo-root>
+gh release download handoff-20260706 --repo bluemaple18-home/104JB --pattern 'resume-os-private-handoff-20260706.tar.gz.enc'
+shasum -a 256 resume-os-private-handoff-20260706.tar.gz.enc
+openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in resume-os-private-handoff-20260706.tar.gz.enc -out resume-os-private-handoff-20260706.tar.gz
+tar -xzf resume-os-private-handoff-20260706.tar.gz
+uv run resume-os profile select matt
+uv run resume-os status --json
+```
+
+SHA-256 必須等於上方紀錄值，否則不得解密或使用。
